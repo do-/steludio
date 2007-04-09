@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, SynEdit, SynEditHighlighter, SynHighlighterPerl, ComCtrls, SearchReplace, SynEditKeyCmds, Registry,
-  StdCtrls, ExtCtrls;
+  StdCtrls, ExtCtrls, SynHighlighterPHP;
 
 type
   TConfigForm = class(TForm)
@@ -17,6 +17,7 @@ type
     SynEdit: TSynEdit;
     Panel3: TPanel;
     EditName: TEdit;
+    SynPHPSyn: TSynPHPSyn;
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure SynEditKeyDown(Sender: TObject; var Key: Word;
@@ -34,11 +35,11 @@ type
     SynSearchOptions: TSynSearchOptions;
     SearchReplaceForm: TSearchReplaceForm;
     LastLoadTime: TDateTime;
-    path: string;
+    path, ext: string;
     procedure SetDirty (b: boolean);
     procedure ReadSettings;
   public
-    procedure Init (_FileName: string; _StatusLine: TStatusBar);
+    procedure Init (_FileName: string; _StatusLine: TStatusBar; is_php: boolean);
     procedure SaveFile;
     procedure LoadFile;
     function GetFileName: string;
@@ -144,20 +145,21 @@ procedure TConfigForm.Init;
 var
   sr: TSearchRec;
 begin
+  if is_php then ext := 'str'      else ext := 'pm';
+  if is_php then synedit.Highlighter := SynPHPSyn;
   FileName := _FileName;
-  path := copy(FileName, 1, pos('Config.pm', FileName) - 1);
+  path := copy(FileName, 1, pos('config.p', LowerCase(FileName)) - 1);
   Caption := FileName;
   StatusLine := _StatusLine;
   SynSearchOptions := [];
   Application.CreateForm (TSearchReplaceForm, SearchReplaceForm);
 
-
   ListBoxTables.Items.Clear;
   ListBoxTables.Items.Add ('<Config>');
 
-  if FindFirst(path + 'Model\*.pm', 0, sr) = 0 then begin
+  if FindFirst(path + 'Model\*.' + ext, 0, sr) = 0 then begin
     repeat
-      ListBoxTables.Items.Add (copy (sr.Name, 1, pos ('.pm', sr.Name) - 1))
+      ListBoxTables.Items.Add (copy (sr.Name, 1, pos ('.' + ext, sr.Name) - 1))
     until FindNext (sr) <> 0;
     FindClose (sr);
   end;
@@ -172,7 +174,7 @@ function TConfigForm.GetFileName: string;
 begin
   if ListBoxTables.ItemIndex = 0
     then Result := FileName
-    else Result := path + 'Model\' + ListBoxTables.Items [ListBoxTables.ItemIndex] + '.pm';
+    else Result := path + 'Model\' + ListBoxTables.Items [ListBoxTables.ItemIndex] + '.' + ext;
 end;
 
 procedure TConfigForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

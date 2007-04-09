@@ -46,7 +46,6 @@ object MainForm: TMainForm
       object FileNewItem: TMenuItem
         Caption = '&New'
         Hint = 'Create a new file'
-        OnClick = FileNew
       end
       object FileOpenItem: TMenuItem
         Caption = '&Open...'

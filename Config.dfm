@@ -7,7 +7,7 @@ object ConfigForm: TConfigForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -14
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsMDIChild
@@ -17,30 +17,30 @@ object ConfigForm: TConfigForm
   Visible = True
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 120
+  TextHeight = 16
   object Splitter1: TSplitter
-    Left = 169
+    Left = 208
     Top = 0
-    Width = 4
-    Height = 610
+    Width = 5
+    Height = 604
     Cursor = crHSplit
   end
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 169
-    Height = 610
+    Width = 208
+    Height = 604
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
     object ListBoxTables: TListBox
       Left = 0
       Top = 0
-      Width = 169
-      Height = 610
+      Width = 208
+      Height = 604
       Align = alClient
-      ItemHeight = 13
+      ItemHeight = 16
       Sorted = True
       TabOrder = 0
       OnDblClick = ListBoxTablesDblClick
@@ -48,23 +48,23 @@ object ConfigForm: TConfigForm
     end
   end
   object Panel2: TPanel
-    Left = 173
+    Left = 213
     Top = 0
-    Width = 689
-    Height = 610
+    Width = 645
+    Height = 604
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object SynEdit: TSynEdit
       Left = 0
-      Top = 33
-      Width = 689
-      Height = 577
+      Top = 41
+      Width = 645
+      Height = 563
       Cursor = crIBeam
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -13
+      Font.Height = -17
       Font.Name = 'Courier New'
       Font.Style = []
       ParentColor = False
@@ -417,14 +417,14 @@ object ConfigForm: TConfigForm
     object Panel3: TPanel
       Left = 0
       Top = 0
-      Width = 689
-      Height = 33
+      Width = 645
+      Height = 41
       Align = alTop
       TabOrder = 1
       object EditName: TEdit
-        Left = 8
-        Top = 4
-        Width = 649
+        Left = 10
+        Top = 5
+        Width = 799
         Height = 21
         ReadOnly = True
         TabOrder = 0
@@ -436,6 +436,15 @@ object ConfigForm: TConfigForm
     CommentAttri.Foreground = clGreen
     KeyAttri.Foreground = clNavy
     Left = 8
+    Top = 8
+  end
+  object SynPHPSyn: TSynPHPSyn
+    DefaultFilter = 
+      'PHP Files (*.php,*.php3,*.phtml,*.inc)|*.php;*.php3;*.phtml;*.in' +
+      'c'
+    CommentAttri.Foreground = clGreen
+    KeyAttri.Foreground = clNavy
+    Left = 48
     Top = 8
   end
 end

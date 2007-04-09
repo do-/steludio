@@ -628,6 +628,15 @@ object EditForm: TEditForm
     Left = 712
     Top = 8
   end
+  object SynPHPSyn: TSynPHPSyn
+    DefaultFilter = 
+      'PHP Files (*.php,*.php3,*.phtml,*.inc)|*.php;*.php3;*.phtml;*.in' +
+      'c'
+    CommentAttri.Foreground = clGreen
+    KeyAttri.Foreground = clNavy
+    Left = 744
+    Top = 8
+  end
   object SynCompletionProposal: TSynCompletionProposal
     DefaultType = ctCode
     Options = [scoUseBuiltInTimer, scoEndCharCompletion]

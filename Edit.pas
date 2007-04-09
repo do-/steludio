@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, SynEditHighlighter, SynHighlighterPerl,
   SynEdit, ComCtrls, SearchReplace, SynEditKeyCmds, NewType, NewAction, FormLine, Registry, UnitSettings, ShellApi,
-  SynCompletionProposal, Config, DumpParser, StrUtils;
+  SynCompletionProposal, Config, DumpParser, StrUtils, SynHighlighterPHP;
 
 type
 
@@ -24,7 +24,7 @@ type
 
   TEditForm = class(TForm)
     Panel1: TPanel;
-    ListBoxTypes: TListBox;  
+    ListBoxTypes: TListBox;
     Panel2: TPanel;
     Panel3: TPanel;
     ListBoxRoles: TListBox;
@@ -48,6 +48,7 @@ type
     ListBoxSubs: TListBox;
     Panel8: TPanel;
     SynCompletionProposal: TSynCompletionProposal;
+    SynPHPSyn: TSynPHPSyn;
     procedure ListBoxTypesDblClick(Sender: TObject);
     procedure ListBoxTypesKeyPress(Sender: TObject; var Key: Char);
     procedure ListBoxRolesDblClick(Sender: TObject);
@@ -73,7 +74,7 @@ type
       Sender: TObject; var AString: String; var x, y: Integer;
       var CanExecute: Boolean);
   private
-    path, appname, tpl_path: string;
+    path, appname, tpl_path, ext, sub, brc: string;
     CurrentFile: string;
     TortoiseSVNPath: string;
     LastLoadTime: TDateTime;
@@ -104,7 +105,7 @@ type
     procedure ReadSettings;
   public
     ConfigForm: TConfigForm;
-    procedure Init (_path: string; _StatusLine: TStatusBar);
+    procedure Init (_path: string; _StatusLine: TStatusBar;is_php: boolean);
     procedure SaveFile;
   end;
 
@@ -190,7 +191,7 @@ begin
 
      Result := '';
 
-     if RadioButtonSelect.Checked then Result := FillTemplate ('sub_select');
+     if RadioButtonSelect.Checked then Result := FillTemplate (sub + '_select');
      if RadioButtonGetItem.Checked then Result := ''
         + #13
 	+ #13 + #9 + 'my $item = sql_select_hash (''' + GetTypeName + ''');'
@@ -451,13 +452,13 @@ begin
   ListBoxActions.Items.Clear;
   ListBoxActions.Items.Add ('<none>');
   ListBoxActions.ItemIndex := 0;
-  Assignfile (f, path + '\Content\' + GetTypeName + '.pm');
+  Assignfile (f, path + '\Content\' + GetTypeName + '.' + ext);
   reset (f);
   while not EOF (f) do begin
     readln (f, s);
-    p1 := pos ('sub do_', s);
+    p1 := pos (sub +' do_', s);
     if p1 = 0 then continue;
-    inc (p1, 7);
+    inc (p1, 4 + length (sub));
     p2 := pos ('_' + GetTypeName, s);
     s := copy (s, p1, p2 - p1);
     if ListBoxActions.Items.IndexOf (s) < 0 then ListBoxActions.Items.Add (s);
@@ -562,7 +563,7 @@ begin
   end
   else StatusLine.Panels [2].Text := '';
 
-  token := 'sub ' + GetSubName;
+  token := sub + ' ' + GetSubName;
 
   found := false;
   for i := 1 to SynEdit.Lines.Count do begin
@@ -585,15 +586,16 @@ begin
   end;
 
   if not found and yes ('Sub not found', 'Sub ' + GetSubName + ' doesn''t exist. Create it?') then begin
-     SynEdit.CaretX := 0;
-     SynEdit.CaretY := 0;
+
+     SynEdit.CaretX   := 0;
+     SynEdit.CaretY   := 0;
      SynEdit.SelStart := 0;
-     SynEdit.SelEnd := 0;
-     SynEdit.SelText :=
+     SynEdit.SelEnd   := length (SynEdit.Lines [0]) + 1;
+     SynEdit.SelText  := SynEdit.Lines [0] + #13 + #13 +
        '################################################################################'
        + #13
        + #13
-       + 'sub ' + GetSubName + ' {'
+       + sub + ' ' + GetSubName + brc + ' {'
        + #13
        + #13
        + GetSubTemplate
@@ -651,7 +653,7 @@ begin
   if RadioButtonDraw.Checked or RadioButtonDrawItem.Checked
     then Result := Result + 'Presentation'
     else Result := Result + 'Content';
-  Result := Result + '\' + GetTypeName + '.pm';
+  Result := Result + '\' + GetTypeName + '.' + ext;
 end;
 
 procedure TEditForm.RefreshRoles;
@@ -663,13 +665,13 @@ begin
   ListBoxRoles.Items.Clear;
   ListBoxRoles.Items.Add ('<everybody>');
   ListBoxRoles.ItemIndex := 0;
-  AssignFile (F, path + '\Content\menu.pm');
+  AssignFile (F, path + '\Content\menu.' + ext);
   Reset (F);
   while not EOF (F) do begin
     Readln (F, s);
-    i := pos ('sub get_menu_for_', s);
+    i := pos ('_menu_for_', s);
     if i = 0 then Continue;
-    inc (i, 17);
+    inc (i, 10);
     j := i;
     while (j < length (s)) and (s [j] in ['a'..'z', '0'..'9', '_']) do Inc (j);
     ListBoxRoles.Items.Add (copy (s, i, j - i));
@@ -682,9 +684,9 @@ var
   sr: TSearchRec;
 begin
   ListBoxTypes.Items.Clear;
-  if FindFirst(path + '\Content\*.pm', 0, sr) = 0 then begin
+  if FindFirst(path + '\Content\*.' + ext, 0, sr) = 0 then begin
     repeat
-      ListBoxTypes.Items.Add (copy (sr.Name, 1, pos ('.pm', sr.Name) - 1))
+      ListBoxTypes.Items.Add (copy (sr.Name, 1, pos ('.' + ext, sr.Name) - 1))
     until FindNext (sr) <> 0;
     FindClose (sr);
   end;
@@ -694,6 +696,10 @@ procedure TEditForm.Init;
 var
   i: integer;
 begin
+  if is_php then ext := 'php'      else ext := 'pm';
+  if is_php then sub := 'function' else sub := 'sub';
+  if is_php then brc := ' ()'      else brc := '';
+  if is_php then synedit.Highlighter := SynPHPSyn;
   path := _path;
   StatusLine := _StatusLine;
   currentFile := '';
@@ -1274,7 +1280,7 @@ begin
   if afterdot
   then begin
 
-    fn := path + '\Model\' + s + '.pm';
+    fn := path + '\Model\' + s + '.' + ext;
     if not FileExists(fn) then begin
       CanExecute := false;
       exit;

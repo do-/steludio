@@ -31,7 +31,7 @@ type
     OpenDialog: TOpenDialog;  { &About... }
     procedure FormCreate(Sender: TObject);
     procedure ShowHint(Sender: TObject);
-    procedure FileNew(Sender: TObject);
+//    procedure FileNew(Sender: TObject);
     procedure FileOpen(Sender: TObject);
     procedure FileSave(Sender: TObject);
     procedure FileExit(Sender: TObject);
@@ -47,7 +47,7 @@ type
     procedure HelpHowToUse(Sender: TObject);
     procedure HelpAbout(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure NewEditForm;
+    procedure NewEditForm (is_php: boolean);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -69,7 +69,7 @@ var
   NewForm: TEditForm;
 begin
   Application.CreateForm (TEditForm, NewForm);
-  NewForm.Init (path, StatusLine);
+  NewForm.Init (path, StatusLine, is_php);
   NewForm.ConfigForm := ConfigForm;
 end;
 
@@ -83,10 +83,10 @@ begin
   StatusLine.SimpleText := Application.Hint;
 end;
 
-procedure TMainForm.FileNew(Sender: TObject);
-begin
-  NewEditForm;
-end;
+//procedure TMainForm.FileNew(Sender: TObject);
+//begin
+//  NewEditForm;
+//end;
 
 procedure TMainForm.FileOpen(Sender: TObject);
 begin
@@ -166,6 +166,7 @@ end;
 procedure TMainForm.FormShow(Sender: TObject);
 var
   p: integer;
+  is_php: boolean;
   FileName: string;
 begin
 
@@ -200,7 +201,6 @@ begin
   end;
 
   path := LowerCase(FileName);
-  p := pos ('\config.pm', path);
 
   if not FileExists (path) then begin
      Application.MessageBox (PChar (path + ' not found' ), 'Wrong location', MB_OK);
@@ -208,8 +208,17 @@ begin
      Exit;
   end;
 
+  p := pos ('\config.pm', path);
+
+  is_php := false;
+
   if p = 0 then begin
-     Application.MessageBox (PChar(FileName + ' is not Config.pm'), 'Wrong file name', MB_OK);
+     is_php := true;
+     p := pos ('\config.php', path);
+  end;
+
+  if p = 0 then begin
+     Application.MessageBox (PChar(FileName + ' is not Config.p[m|hp]'), 'Wrong file name', MB_OK);
      Close;
      Exit;
   end;
@@ -229,9 +238,9 @@ begin
   end;
 
   Application.CreateForm (TConfigForm, ConfigForm);
-  ConfigForm.Init (path + '\Config.pm', StatusLine);
+  ConfigForm.Init (FileName, StatusLine, is_php);
 
-  NewEditForm;
+  NewEditForm (is_php);
 
 end;
 
