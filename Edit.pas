@@ -549,8 +549,16 @@ begin
       end;
       Assignfile (f, GetFileName);
       rewrite (f);
-      writeln (f, '1;');
+
+      if ext = 'php' then begin
+        writeln (f, '<?php');
+        writeln (f);
+        writeln (f, '?>');
+      end
+      else writeln (f, '1;');
+
       closefile (f);
+
     end;
 
     SynEdit.Lines.LoadFromFile (GetFileName);
@@ -698,7 +706,7 @@ var
 begin
   if is_php then ext := 'php'      else ext := 'pm';
   if is_php then sub := 'function' else sub := 'sub';
-  if is_php then brc := ' ()'      else brc := '';
+  if is_php then brc := ' ($data)' else brc := '';
   if is_php then synedit.Highlighter := SynPHPSyn;
   path := _path;
   StatusLine := _StatusLine;
