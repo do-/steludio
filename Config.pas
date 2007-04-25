@@ -35,10 +35,10 @@ type
     SynSearchOptions: TSynSearchOptions;
     SearchReplaceForm: TSearchReplaceForm;
     LastLoadTime: TDateTime;
-    path, ext: string;
     procedure SetDirty (b: boolean);
     procedure ReadSettings;
   public
+    path, ext: string;
     procedure Init (_FileName: string; _StatusLine: TStatusBar; is_php: boolean);
     procedure SaveFile;
     procedure LoadFile;
@@ -148,7 +148,10 @@ begin
   if is_php then ext := 'str'      else ext := 'pm';
   if is_php then synedit.Highlighter := SynPHPSyn;
   FileName := _FileName;
-  path := copy(FileName, 1, pos('config.p', LowerCase(FileName)) - 1);
+
+  if is_php
+    then path := copy(FileName, 1, pos('\lib\', LowerCase(FileName)) - 1) + '\'
+    else path := copy(FileName, 1, pos('config.p', LowerCase(FileName)) - 1);
   Caption := FileName;
   StatusLine := _StatusLine;
   SynSearchOptions := [];

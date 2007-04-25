@@ -555,7 +555,10 @@ begin
         writeln (f);
         writeln (f, '?>');
       end
-      else writeln (f, '1;');
+      else begin
+        writeln (f);
+        writeln (f, '1;');
+      end;
 
       closefile (f);
 
@@ -1288,7 +1291,7 @@ begin
   if afterdot
   then begin
 
-    fn := path + '\Model\' + s + '.' + ext;
+    fn := ConfigForm.path + 'Model\' + s + '.' + ConfigForm.ext;
     if not FileExists(fn) then begin
       CanExecute := false;
       exit;
