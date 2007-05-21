@@ -7,7 +7,7 @@ object MainForm: TMainForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -14
+  Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsMDIForm
@@ -19,12 +19,12 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 120
-  TextHeight = 16
+  PixelsPerInch = 96
+  TextHeight = 13
   object StatusLine: TStatusBar
     Left = 0
-    Top = 541
-    Width = 788
+    Top = 548
+    Width = 790
     Height = 23
     Panels = <
       item
@@ -154,7 +154,7 @@ object MainForm: TMainForm
   end
   object OpenDialog: TOpenDialog
     DefaultExt = '.pm'
-    Filter = 'Perl modules|*.pm'
+    Filter = 'Perl projects|Config*.pm|PHP projects|config*.php'
     Title = 'Root module'
     Left = 46
     Top = 7
