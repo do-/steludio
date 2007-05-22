@@ -53,7 +53,7 @@
 						portion => $data -> {portion},
 					},
 
-					$fake_select,
+					fake_select (),
 
 				],
 				

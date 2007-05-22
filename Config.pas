@@ -118,6 +118,13 @@ begin
       writeln (f, '#' + #9 + 'is_open => {TYPE_NAME => ''tinyint'', NULLABLE => 0, COLUMN_DEF => 0}, ');
       writeln (f, '#' + #9 + 'label   => {TYPE_NAME => ''varchar'', COLUMN_SIZE => 255}, ');
       writeln (f, '#' + #9 + 'price   => {TYPE_NAME => ''decimal'', COLUMN_SIZE => 15, DECIMAL_DIGITS => 2}, ');
+      writeln (f);
+      writeln (f, '#' + #9 + 'file_name => {TYPE_NAME    => ''varchar'', COLUMN_SIZE  => 255}, ');
+      writeln (f, '#' + #9 + 'file_type => {TYPE_NAME    => ''varchar'', COLUMN_SIZE  => 255}, ');
+      writeln (f, '#' + #9 + 'file_path => {TYPE_NAME    => ''varchar'', COLUMN_SIZE  => 255}, ');
+      writeln (f, '#' + #9 + 'file_size => {TYPE_NAME    => ''int''}, ');
+
+
       writeln (f, '},');
       writeln (f);
       writeln (f, '#keys => {');

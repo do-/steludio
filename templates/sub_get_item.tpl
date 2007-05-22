@@ -28,4 +28,4 @@
 			__TYPE__.label
 EOS
 
-		return $item;
+	return $item;
