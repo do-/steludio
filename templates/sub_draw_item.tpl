@@ -10,6 +10,7 @@
 			{
 				name  => 'label',
 				label => 'Название',
+				size  => 40,
 			},
 		],
 	)
@@ -21,7 +22,7 @@
 		sub {
 		
 			draw_cells ({
-				bgcolor => $i->{id} == $data->{id} ? '#ffffd0' : undef,
+				bgcolor => $i -> {id} == $data -> {id} ? '#ffffd0' : undef,
 			},[
 				{
 					type => 'checkbox',
@@ -46,7 +47,7 @@
 			name  => 't1',
 						
 			top_toolbar => [{
-				keep_params=>[type,id],
+				keep_params => [type,id],
 			},
 				{
 					name  => 'first',

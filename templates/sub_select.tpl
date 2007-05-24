@@ -7,7 +7,7 @@
 	my @params = ();
 	
 	if ($_REQUEST {q}) {		
-		$filter = ' AND __TYPE__.label LIKE ?';
+		$filter .= ' AND __TYPE__.label LIKE ?';
 		push @params, '%' . $_REQUEST {q} . '%';		
 	}
 

@@ -30,7 +30,7 @@
 			{
 				title => {label => ...},
 
-				top_toolbar=>[{
+				top_toolbar => [{
 						keep_params => ['type', 'select'],
 					},
 					{
