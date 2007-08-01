@@ -8,10 +8,19 @@
 		
 		[
 			{
-				name  => 'label',
-				label => 'Название',
-				size  => 40,
+				name    => 'label',
+				label   => 'Название',
+				size    => 40,
+				max_len => 255,
 			},
+#			{
+#				name   => 'id_user',
+#				label  => 'Пользователь',
+#				type   => 'select',
+#				values => $data -> {users},
+#				empty  => '[Выберите пользователя]',
+#				other  => '/?type=users',
+#			},
 		],
 	)
 
@@ -42,12 +51,12 @@
 			
 			title => {label => 'Похожие названия'},
 			
-			off   => !$_REQUEST{__read_only} || @{$data->{clones}} < 2,
+			off   => !$_REQUEST{__read_only} || @{$data -> {clones}} < 2,
 			
 			name  => 't1',
 						
 			top_toolbar => [{
-				keep_params => [type,id],
+				keep_params => ['type', 'id'],
 			},
 				{
 					name  => 'first',

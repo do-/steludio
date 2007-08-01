@@ -8,7 +8,7 @@
 				'Наименование',
 			],
 
-			sub{
+			sub {
 
 				draw_cells ({
 					href => "/?type=__TYPE__&id=$$i{id}",
@@ -28,7 +28,7 @@
 			$data -> {__TYPE__},
 
 			{
-				title => {label => ...},
+				title => {label => '...'},
 
 				top_toolbar => [{
 						keep_params => ['type', 'select'],
