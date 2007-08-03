@@ -73,7 +73,7 @@
 					{
 						icon  => 'delete',
 						label => 'слить выделенные записи с текущей',
-						href  => "javaScript:if(confirm(Вы уверены, что все выделенные записи совпадают по смыслу с текущей?')) document.forms[t1].submit()",
+						href  => "javaScript:if(confirm('Вы уверены, что все выделенные записи совпадают по смыслу с текущей?')) document.forms ['t1'].submit()",
 					}
 				]
 
