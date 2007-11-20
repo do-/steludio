@@ -11,6 +11,11 @@
 		push @params, '%' . $_REQUEST {q} . '%';		
 	}
 
+	if ($_REQUEST {id_user}) {		
+		$filter .= ' AND __TYPE__.label = ?';
+		push @params, $_REQUEST {id_user};
+	}
+
 	my $start = $_REQUEST {start} + 0;
 
 	($item -> {__TYPE__}, $item -> {cnt}) = sql_select_all_cnt (<<EOS, @params, {fake => '__TYPE__'});

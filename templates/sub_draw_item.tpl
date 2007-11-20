@@ -1,7 +1,15 @@
 	my ($data) = @_;
 
+	$_REQUEST {__focused_input} = '_label';
+
 	draw_form ({
 			right_buttons => [del ($data)],
+			
+			path => [
+				{type => '__TYPE__', name => '???'},
+				{type => '__TYPE__', name => $item -> {label}, id => $item -> {id}},
+			],
+			
 		},
 		
 		$data,
@@ -9,7 +17,7 @@
 		[
 			{
 				name    => 'label',
-				label   => 'Название',
+				label   => 'Наименование',
 				size    => 40,
 				max_len => 255,
 			},
@@ -36,7 +44,7 @@
 				{
 					type => 'checkbox',
 					name => "_clone_$$i{id}",
-					off  => $i -> {id} == $data -> {id} || $i -> {id} == 1,
+					off  => $i -> {id} == $data -> {id},
 				},
 				
 				$i -> {label},

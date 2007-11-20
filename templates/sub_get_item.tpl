@@ -7,11 +7,6 @@
 #		voc_foo => {order => "id", filter => "id=$$data{id___TYPE__}"}
 #	);
 
-	$item -> {path} = [
-		{type => '__TYPE__', name => '???'},
-		{type => '__TYPE__', name => $item -> {label}, id => $item -> {id}},
-	];
-
 	unless ($_REQUEST {first}) {
 		$_REQUEST {first} = length $item -> {label};
 		$_REQUEST {first} = 4 if $_REQUEST {first} > 4;
