@@ -251,9 +251,9 @@ begin
      ord ('S'): FileSave (nil);
   end;
 
-  if Shift = [] then case Key of
-     VK_F1: FormHelp.ShowModal;
-  end;
+//  if Shift = [] then case Key of
+//     VK_F1: FormHelp.ShowModal;
+//  end;
 
 end;
 

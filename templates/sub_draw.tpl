@@ -48,9 +48,6 @@
 
 					{
 						type    => 'pager',
-						cnt     => 0 + @{$data -> {__TYPE__}},
-						total   => $data -> {cnt},
-						portion => $data -> {portion},
 					},
 
 					fake_select (),

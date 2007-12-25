@@ -194,7 +194,7 @@ begin
 
   if Shift = [] then case Key of
 
-    VK_F1: FormHelp.ShowModal;
+//    VK_F1: FormHelp.ShowModal;
 
     VK_F6: Application.MainForm.Next;
 

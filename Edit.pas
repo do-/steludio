@@ -577,6 +577,108 @@ begin
   LoadCurrentSub;
 end;
 
+function DigitToHex(Digit: Integer): Char;
+begin
+  case Digit of
+	0..9: Result := Chr(Digit + Ord('0'));
+	10..15: Result := Chr(Digit - 10 + Ord('A'));
+  else
+	Result := '0';
+  end;
+end; // DigitToHex
+function URLEncode(const S: string): string;
+  var
+	i, idx, len: Integer;
+begin
+  len := 0;
+  for i := 1 to Length(S) do
+	if ((S[i] >= '0') and (S[i] <= '9')) or
+	((S[i] >= 'A') and (S[i] <= 'Z')) or
+	((S[i] >= 'a') and (S[i] <= 'z')) or (S[i] = ' ') or
+	(S[i] = '_') or (S[i] = '*') or (S[i] = '-') or (S[i] = '.') then
+	  len := len + 1
+	else
+	  len := len + 3;
+  SetLength(Result, len);
+  idx := 1;
+  for i := 1 to Length(S) do
+	if S[i] = ' ' then
+	begin
+	  Result[idx] := '+';
+	  idx := idx + 1;
+	end
+	else if ((S[i] >= '0') and (S[i] <= '9')) or
+	((S[i] >= 'A') and (S[i] <= 'Z')) or
+	((S[i] >= 'a') and (S[i] <= 'z')) or
+	(S[i] = '_') or (S[i] = '*') or (S[i] = '-') or (S[i] = '.') then
+	begin
+	  Result[idx] := S[i];
+	  idx := idx + 1;
+	end
+	else
+	begin
+	  Result[idx] := '%';
+	  Result[idx + 1] := DigitToHex(Ord(S[i]) div 16);
+	  Result[idx + 2] := DigitToHex(Ord(S[i]) mod 16);
+	  idx := idx + 3;
+	end;
+end; // URLEncode
+function URLDecode(const S: string): string;
+  var
+	i, idx, len, n_coded: Integer;
+  function WebHexToInt(HexChar: Char): Integer;
+  begin
+	if HexChar < '0' then
+	  Result := Ord(HexChar) + 256 - Ord('0')
+	else if HexChar <= Chr(Ord('A') - 1) then
+	  Result := Ord(HexChar) - Ord('0')
+	else if HexChar <= Chr(Ord('a') - 1) then
+	  Result := Ord(HexChar) - Ord('A') + 10
+	else
+	  Result := Ord(HexChar) - Ord('a') + 10;
+  end;
+begin
+  len := 0;
+  n_coded := 0;
+  for i := 1 to Length(S) do
+	if n_coded >= 1 then
+	begin
+	  n_coded := n_coded + 1;
+	  if n_coded >= 3 then
+		n_coded := 0;
+	end
+	else
+	begin
+	  len := len + 1;
+	  if S[i] = '%' then
+		n_coded := 1;
+	end;
+  SetLength(Result, len);
+  idx := 0;
+  n_coded := 0;
+  for i := 1 to Length(S) do
+	if n_coded >= 1 then
+	begin
+	  n_coded := n_coded + 1;
+	  if n_coded >= 3 then
+	  begin
+		Result[idx] := Chr((WebHexToInt(S[i - 1]) * 16 +
+		  WebHexToInt(S[i])) mod 256);
+		n_coded := 0;
+	  end;
+	end
+	else
+	begin
+	  idx := idx + 1;
+	  if S[i] = '%' then
+		n_coded := 1;
+	  if S[i] = '+' then
+		Result[idx] := ' '
+	  else
+		Result[idx] := S[i];
+	end;
+end; // URLDecode
+
 procedure TEditForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
   s: string;
@@ -616,7 +718,13 @@ begin
 
   if Shift = [] then case Key of
 
-    VK_F1: FormHelp.ShowModal;
+//   VK_F1: FormHelp.ShowModal;
+
+    VK_F1: begin
+      s := SynEdit.SelText;
+      if s = '' then s := 'StEludio';
+      ShellExecute (self.Handle, 'open', pchar ('http://eludia.ru/wiki/index.php/' + URLEncode(s)), nil, nil, SW_SHOWNORMAL);
+    end;
 
     VK_F6: Application.MainForm.Next;
 
