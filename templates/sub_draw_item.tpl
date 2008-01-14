@@ -7,7 +7,7 @@
 			
 			path => [
 				{type => '__TYPE__', name => '???'},
-				{type => '__TYPE__', name => $item -> {label}, id => $item -> {id}},
+				{type => '__TYPE__', name => $data -> {label}, id => $data -> {id}},
 			],
 			
 		},
