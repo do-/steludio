@@ -91,6 +91,13 @@
 					},
 
 					{
+						type   => 'input_select',
+						name   => 'id_...',
+						values => $data -> {...},
+						empty  => '[Все ...]',
+					},
+
+					{
 						type    => 'pager',
 					},
 
