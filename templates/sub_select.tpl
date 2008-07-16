@@ -1,39 +1,21 @@
+
+	sql (
 	
-	my $item = {
-		portion => $conf -> {portion},
-	};
+		add_vocabularies ({},
+			users => {},
+		),
+		
+		__TYPE__ => [
 	
-	my $filter = '';
-	my @params = ();
+			'id_user',
+			
+			['label LIKE %?%' => $_REQUEST {q}],
+			
+			[ LIMIT => [0 + $_REQUEST {start}, $conf -> {portion}]],
+		
+		],
+			
+		'users' # , other joined tables
+		
+	);
 	
-	if ($_REQUEST {q}) {		
-		$filter .= ' AND __TYPE__.label LIKE ?';
-		push @params, '%' . $_REQUEST {q} . '%';		
-	}
-
-	if ($_REQUEST {id_user}) {		
-		$filter .= ' AND __TYPE__.label = ?';
-		push @params, $_REQUEST {id_user};
-	}
-
-	my $start = $_REQUEST {start} + 0;
-
-	($item -> {__TYPE__}, $item -> {cnt}) = sql_select_all_cnt (<<EOS, @params, {fake => '__TYPE__'});
-		SELECT
-			__TYPE__.*
-#			, ???.label AS ???_label
-#			, ...
-		FROM
-			__TYPE__
-#			INNER JOIN ??? ON ???.id_??? = ???.id
-#			LEFT JOIN ...
-		WHERE
-			1=1
-			$filter
-		ORDER BY
-			__TYPE__.label
-		LIMIT
-			$start, $$item{portion}
-EOS
-
-	return $item;

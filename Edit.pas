@@ -49,6 +49,7 @@ type
     Panel8: TPanel;
     SynCompletionProposal: TSynCompletionProposal;
     SynPHPSyn: TSynPHPSyn;
+    EditFilter: TEdit;
     procedure ListBoxTypesDblClick(Sender: TObject);
     procedure ListBoxTypesKeyPress(Sender: TObject; var Key: Char);
     procedure ListBoxRolesDblClick(Sender: TObject);
@@ -73,6 +74,7 @@ type
     procedure SynCompletionProposalExecute(Kind: SynCompletionType;
       Sender: TObject; var AString: String; var x, y: Integer;
       var CanExecute: Boolean);
+    procedure EditFilterChange(Sender: TObject);
   private
     path, appname, tpl_path, ext, sub, brc: string;
     CurrentFile: string;
@@ -464,11 +466,14 @@ end;
 procedure TEditForm.RefreshTypes;
 var
   sr: TSearchRec;
+  s: string;
 begin
   ListBoxTypes.Items.Clear;
   if FindFirst(path + '\Content\*.' + ext, 0, sr) = 0 then begin
     repeat
-      ListBoxTypes.Items.Add (copy (sr.Name, 1, pos ('.' + ext, sr.Name) - 1))
+      s := copy (sr.Name, 1, pos ('.' + ext, sr.Name) - 1);
+      if (length(EditFilter.Text) > 0) and (pos(EditFilter.Text, s) = 0) then continue;
+      ListBoxTypes.Items.Add (s)
     until FindNext (sr) <> 0;
     FindClose (sr);
   end;
@@ -798,9 +803,24 @@ begin
       ReadSettings;
     end;
 
+    ord ('R'): begin
+
+        if ext = 'php' then begin
+          s := SynEdit.SelText;
+          s := StringReplace (s, '{', 'array (', [rfReplaceAll]);
+          s := StringReplace (s, '[', 'array (', [rfReplaceAll]);
+          s := StringReplace (s, '}',       ')', [rfReplaceAll]);
+          s := StringReplace (s, ']',       ')', [rfReplaceAll]);
+          SynEdit.SelText := s;
+        end;
+
+    end;
+
   end;
 
   if Shift = [ssCtrl] then case Key of
+
+    VK_F8: ActiveControl := EditFilter;
 
     219, 221: begin
       SynEdit.FindMatchingBracket;
@@ -1212,6 +1232,11 @@ begin
    then SynCompletionProposal.NbLinesInWindow := SynCompletionProposal.ItemList.Count
    else SynCompletionProposal.NbLinesInWindow := 20;
 
+end;
+
+procedure TEditForm.EditFilterChange(Sender: TObject);
+begin
+ RefreshTypes;
 end;
 
 end.

@@ -1,13 +1,13 @@
 object EditForm: TEditForm
-  Left = 236
-  Top = 137
+  Left = 220
+  Top = 88
   Width = 870
   Height = 866
   Caption = 'EditForm'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -14
+  Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsMDIChild
@@ -20,45 +20,45 @@ object EditForm: TEditForm
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 120
-  TextHeight = 16
+  PixelsPerInch = 96
+  TextHeight = 13
   object Splitter1: TSplitter
-    Left = 218
+    Left = 177
     Top = 0
-    Width = 5
-    Height = 830
+    Width = 4
+    Height = 837
     Cursor = crHSplit
   end
   object Splitter2: TSplitter
-    Left = 727
+    Left = 754
     Top = 0
-    Width = 5
-    Height = 830
+    Width = 4
+    Height = 837
     Cursor = crHSplit
     Align = alRight
   end
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 218
-    Height = 830
+    Width = 177
+    Height = 837
     Align = alLeft
     TabOrder = 0
     object Splitter4: TSplitter
       Left = 1
-      Top = 484
-      Width = 216
-      Height = 2
+      Top = 393
+      Width = 175
+      Height = 7
       Cursor = crVSplit
       Align = alTop
     end
     object ListBoxTypes: TListBox
       Left = 1
-      Top = 23
-      Width = 216
-      Height = 461
+      Top = 27
+      Width = 175
+      Height = 366
       Align = alTop
-      ItemHeight = 16
+      ItemHeight = 13
       Sorted = True
       TabOrder = 0
       OnDblClick = ListBoxTypesDblClick
@@ -67,27 +67,40 @@ object EditForm: TEditForm
     object Panel2: TPanel
       Left = 1
       Top = 1
-      Width = 216
-      Height = 22
+      Width = 175
+      Height = 26
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvNone
-      Caption = '  Types [F8]'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -15
+      Font.Height = -12
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
+      object EditFilter: TEdit
+        Left = 3
+        Top = 3
+        Width = 169
+        Height = 20
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        OnChange = EditFilterChange
+      end
     end
     object ListBoxSubs: TListBox
       Left = 1
-      Top = 508
-      Width = 216
-      Height = 321
+      Top = 418
+      Width = 175
+      Height = 418
       Align = alClient
-      ItemHeight = 16
+      ItemHeight = 13
       Sorted = True
       TabOrder = 2
       OnDblClick = ListBoxSubsDblClick
@@ -95,16 +108,16 @@ object EditForm: TEditForm
     end
     object Panel8: TPanel
       Left = 1
-      Top = 486
-      Width = 216
-      Height = 22
+      Top = 400
+      Width = 175
+      Height = 18
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvNone
       Caption = '  Subs [F12]'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -15
+      Font.Height = -12
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       ParentFont = False
@@ -112,27 +125,27 @@ object EditForm: TEditForm
     end
   end
   object Panel3: TPanel
-    Left = 732
+    Left = 758
     Top = 0
-    Width = 126
-    Height = 830
+    Width = 102
+    Height = 837
     Align = alRight
     TabOrder = 1
     object Splitter3: TSplitter
       Left = 1
-      Top = 516
-      Width = 124
+      Top = 419
+      Width = 100
       Height = 2
       Cursor = crVSplit
       Align = alTop
     end
     object ListBoxRoles: TListBox
       Left = 1
-      Top = 23
-      Width = 124
-      Height = 493
+      Top = 19
+      Width = 100
+      Height = 400
       Align = alTop
-      ItemHeight = 16
+      ItemHeight = 13
       Sorted = True
       TabOrder = 0
       OnDblClick = ListBoxRolesDblClick
@@ -141,15 +154,15 @@ object EditForm: TEditForm
     object Panel4: TPanel
       Left = 1
       Top = 1
-      Width = 124
-      Height = 22
+      Width = 100
+      Height = 18
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvNone
       Caption = '  Roles [F9]'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -15
+      Font.Height = -12
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       ParentFont = False
@@ -157,11 +170,11 @@ object EditForm: TEditForm
     end
     object ListBoxActions: TListBox
       Left = 1
-      Top = 540
-      Width = 124
-      Height = 289
+      Top = 439
+      Width = 100
+      Height = 397
       Align = alClient
-      ItemHeight = 16
+      ItemHeight = 13
       Sorted = True
       TabOrder = 2
       OnClick = ListBoxActionsClick
@@ -170,16 +183,16 @@ object EditForm: TEditForm
     end
     object Panel7: TPanel
       Left = 1
-      Top = 518
-      Width = 124
-      Height = 22
+      Top = 421
+      Width = 100
+      Height = 18
       Align = alTop
       Alignment = taLeftJustify
       BevelOuter = bvNone
       Caption = '  Actions [F11]'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -15
+      Font.Height = -12
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       ParentFont = False
@@ -187,25 +200,25 @@ object EditForm: TEditForm
     end
   end
   object Panel5: TPanel
-    Left = 223
+    Left = 181
     Top = 0
-    Width = 504
-    Height = 830
+    Width = 573
+    Height = 837
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     object Panel6: TPanel
       Left = 0
       Top = 0
-      Width = 504
-      Height = 50
+      Width = 573
+      Height = 41
       Align = alTop
       TabOrder = 0
       object RadioButtonSelect: TRadioButton
-        Left = 10
-        Top = 5
-        Width = 139
-        Height = 21
+        Left = 8
+        Top = 4
+        Width = 113
+        Height = 17
         Caption = 'select'
         Checked = True
         TabOrder = 0
@@ -213,47 +226,47 @@ object EditForm: TEditForm
         OnClick = RadioButtonSelectClick
       end
       object RadioButtonGetItem: TRadioButton
-        Left = 10
-        Top = 27
-        Width = 139
-        Height = 21
+        Left = 8
+        Top = 22
+        Width = 113
+        Height = 17
         Caption = 'get_item'
         TabOrder = 1
         OnClick = RadioButtonGetItemClick
       end
       object RadioButtonDrawItem: TRadioButton
-        Left = 234
-        Top = 27
-        Width = 128
-        Height = 21
+        Left = 190
+        Top = 22
+        Width = 104
+        Height = 17
         Caption = 'draw_item'
         TabOrder = 2
         OnClick = RadioButtonDrawItemClick
       end
       object RadioButtonDraw: TRadioButton
-        Left = 234
-        Top = 5
-        Width = 128
-        Height = 21
+        Left = 190
+        Top = 4
+        Width = 104
+        Height = 17
         Caption = 'draw'
         TabOrder = 3
         OnClick = RadioButtonDrawClick
       end
       object RadioButtonDo: TRadioButton
-        Left = 108
-        Top = 5
-        Width = 70
-        Height = 21
+        Left = 88
+        Top = 4
+        Width = 57
+        Height = 17
         Caption = 'do'
         Enabled = False
         TabOrder = 4
         OnClick = RadioButtonDrawClick
       end
       object RadioButtonValidate: TRadioButton
-        Left = 108
-        Top = 27
-        Width = 80
-        Height = 21
+        Left = 88
+        Top = 22
+        Width = 65
+        Height = 17
         Caption = 'validate'
         Enabled = False
         TabOrder = 5
@@ -262,14 +275,14 @@ object EditForm: TEditForm
     end
     object SynEdit: TSynEdit
       Left = 0
-      Top = 50
-      Width = 504
-      Height = 780
+      Top = 41
+      Width = 573
+      Height = 796
       Cursor = crIBeam
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -17
+      Font.Height = -15
       Font.Name = 'Courier New'
       Font.Pitch = fpFixed
       Font.Style = []
