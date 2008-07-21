@@ -3,7 +3,10 @@
 	$_REQUEST {__focused_input} = '_label';
 
 	draw_form ({
+	
 			right_buttons => [del ($data)],
+			
+			no_edit => $data -> {no_del},
 			
 			path => [
 				{type => '__TYPE__', name => '???'},
@@ -21,6 +24,7 @@
 				size    => 40,
 				max_len => 255,
 			},
+
 #			{
 #				name   => 'id_user',
 #				label  => 'Пользователь',
@@ -29,7 +33,19 @@
 #				empty  => '[Выберите пользователя]',
 #				other  => '/?type=users',
 #			},
+
+#			{
+#				name   => 'id_org',
+#				label  => 'Организация',
+#				type   => 'suggest',
+#				size    => 40,
+#				values => sub {sql (orgs => ['id',
+#					['label LIKE ?%' => $_REQUEST {_id_org}],
+#				])},
+#			},
+
 		],
+
 	)
 
 	.
