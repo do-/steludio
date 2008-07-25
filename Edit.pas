@@ -6,21 +6,9 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, SynEditHighlighter, SynHighlighterPerl,
   SynEdit, ComCtrls, SearchReplace, SynEditKeyCmds, NewType, NewAction, FormLine, Registry, UnitSettings, ShellApi,
-  SynCompletionProposal, Config, DumpParser, StrUtils, SynHighlighterPHP;
+  SynCompletionProposal, Config, StrUtils, SynHighlighterPHP, SuperObject;
 
 type
-
-  TLoadColumns = class (TDumpHandler)
-    private
-      last: string;
-    public
-      StringList: TStringList;
-      constructor Create ();
-      destructor Free ();
-      procedure OnElement (keys: array of string; value: string; depth: integer); override;
-  end;
-
-
 
   TEditForm = class(TForm)
     Panel1: TPanel;
@@ -127,45 +115,14 @@ begin
      else Result := idyes = Application.MessageBox (PChar (text), PChar (title), mb_yesno + mb_iconquestion);
 end;
 
-
-
-
-
-
-
-
-
-constructor TLoadColumns.Create ();
-begin
-  StringList := TStringList.Create ();
-  last := '';
-end;
-
-procedure TLoadColumns.OnElement (keys: array of string; value: string; depth: integer);
-begin
-  if depth <> 3 then exit;
-  if last = keys [1] then exit;
-  if keys [0] <> 'columns' then exit;
-  last := keys [1];
-  StringList.Add (keys [1]);
-end;
-
-destructor TLoadColumns.Free ();
-begin
-  StringList.Free ();
-end;
-
-
-
-
-
-
+{
 function FillTemplate (name: string): string;
 begin
 
 
 
 end;
+}
 
 function TEditForm.FillTemplate (name: string): string;
 var
@@ -691,11 +648,6 @@ var
   i: integer;
 begin
 
-
-//Application.MessageBox (pchar(inttostr(key)), 'Scan code', mb_ok);
-
-
-
   if Shift = [ssCtrl, ssAlt, ssShift] then begin
 
     if TortoiseSVNPath = '' then begin
@@ -722,8 +674,6 @@ begin
   if (Key = ord ('S')) and (Shift = [ssCtrl]) then SaveFile;
 
   if Shift = [] then case Key of
-
-//   VK_F1: FormHelp.ShowModal;
 
     VK_F1: begin
       s := SynEdit.SelText;
@@ -1165,18 +1115,16 @@ begin
 
 end;
 
-
-
 procedure TEditForm.SynCompletionProposalExecute(Kind: SynCompletionType; Sender: TObject; var AString: String; var x, y: Integer; var CanExecute: Boolean);
 var
  s, fn, src, ss: string;
  t: textFile;
- LoadColumns: TLoadColumns;
  afterdot: boolean;
  p: integer;
+ columns: ISuperObject;
+ F: TSuperObjectIter;
+ sl: TStringList;
 begin
-
-//  Application.MessageBox(pchar('c=' + synedit.Lines[synedit.CaretY - 1][synedit.CaretX - 1]), '1', mb_ok);
 
   s := synedit.GetWordAtRowCol(SynEdit.PrevWordPos);
 
@@ -1208,16 +1156,37 @@ begin
     closefile(t);
     src := src + '}';
 
+    src := AnsiReplaceStr (src, '=>', ':');
+    src := AnsiReplaceStr (src, '''', '"');
+
     SynCompletionProposal.ItemList.Clear;
-    LoadColumns := TLoadColumns.Create ();
-    parse(src, LoadColumns);
 
-    LoadColumns.StringList.add ('id');
-    LoadColumns.StringList.Sort;
+    columns := SO (src);
 
-    SynCompletionProposal.ItemList.AddStrings (LoadColumns.StringList);
+    if (columns <> nil) then begin
 
-    LoadColumns.Free;
+      columns := columns.O ['columns'];
+
+      sl := TStringList.Create;
+
+      if (ObjectFindFirst (columns, F)) then begin
+
+        sl.Add ('id');
+        sl.Add ('fake');
+
+        repeat sl.Add (F.key) until not ObjectFindNext (F);
+
+        ObjectFindClose (F);
+
+      end;
+
+      sl.Sorted := true;
+
+      SynCompletionProposal.ItemList.AddStrings (sl);
+
+      sl.Free;
+
+    end;
 
   end
   else begin

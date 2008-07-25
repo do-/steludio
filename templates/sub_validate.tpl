@@ -7,5 +7,5 @@
 #		sub {vb_yes ("Организации '$_REQUEST{_id_org__label}' пока нет в справочнике. Добавить её прямо сейчас?")},
 #	) or return '#_id_org#:Действие отменено';
 
-	return undef;
+	undef;
 	
