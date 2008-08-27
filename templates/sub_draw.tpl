@@ -68,7 +68,7 @@
 #						href    => "javaScript:if (confirm('Вы уверены, что хотите удалить все выделенные ...?')) {var f = document.forms['t1']; f.elements['action'].value='kill'; f.submit()} void(0);",
 #						confirm => '',
 #						off     =>
-#							$_REQUEST {fake},
+#							$_REQUEST {fake}
 #							,
 #					},
 
@@ -78,7 +78,7 @@
 #						href    => "javaScript:if (confirm('Вы уверены, что хотите восстановить все выделенные ...?')) {var f = document.forms['t1']; f.elements['action'].value='unkill'; f.submit()} void(0);",
 #						confirm => '',
 #						off     =>
-#							$_REQUEST {fake} != -1,
+#							$_REQUEST {fake} != -1
 #							,
 #					},
 
@@ -109,7 +109,7 @@
 
 					{
 						icon  => 'create',
-						label => '&Добавить',
+						label => 'Добавить',
 						href  => '?type=__TYPE__&action=create',
 						keep_esc => 1,
 					},
@@ -120,7 +120,7 @@
 						href    => "javaScript:if (confirm('Вы уверены, что хотите удалить все выделенные ...?')) {var f = document.forms['t1']; f.elements['action'].value='kill'; f.submit()} void(0);",
 						confirm => '',
 						off     =>
-							$_REQUEST {fake},
+							$_REQUEST {fake}
 							,
 					},
 
@@ -130,7 +130,7 @@
 						href    => "javaScript:if (confirm('Вы уверены, что хотите восстановить все выделенные ...?')) {var f = document.forms['t1']; f.elements['action'].value='unkill'; f.submit()} void(0);",
 						confirm => '',
 						off     =>
-							$_REQUEST {fake} != -1,
+							$_REQUEST {fake} != -1
 							,
 					},
 
