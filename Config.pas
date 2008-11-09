@@ -37,6 +37,7 @@ type
     LastLoadTime: TDateTime;
     procedure SetDirty (b: boolean);
     procedure ReadSettings;
+    procedure TouchMenu;
   public
     path, ext: string;
     procedure Init (_FileName: string; _StatusLine: TStatusBar; is_php: boolean);
@@ -87,6 +88,11 @@ begin
   LastLoadTime := FileDateToDateTime (FileAge (LastFileName));
   SetDirty (false);
   StatusLine.Panels [2].Text := LastFileName + ' saved.';
+
+  if Application.MessageBox ('Touch menu.pm?', 'Question', mb_iconquestion + mb_yesno) = idyes then begin
+   TouchMenu ();
+  end;
+
 end;
 
 function yes (title, text: string): boolean;
@@ -178,6 +184,14 @@ begin
 
   LoadFile ();
 
+end;
+
+procedure TConfigForm.TouchMenu;
+var handle: integer;
+begin
+ handle := FileOpen (path + 'Content\menu.pm', 1);
+ FileSetDate (handle, DateTimeToFileDate (Now));
+ FileClose (handle);
 end;
 
 function TConfigForm.GetFileName: string;
