@@ -6,7 +6,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ExtCtrls, SynEditHighlighter, SynHighlighterPerl,
   SynEdit, ComCtrls, SearchReplace, SynEditKeyCmds, NewType, NewAction, FormLine, Registry, UnitSettings, ShellApi,
-  SynCompletionProposal, Config, StrUtils, SynHighlighterPHP, SuperObject;
+  SynCompletionProposal, Config, StrUtils, SynHighlighterPHP, SuperObject, ActiveX, ComObj, shdocvw, mshtml;
 
 type
 
@@ -646,6 +646,22 @@ var
   s: string;
   app_path, params: string;
   i: integer;
+//  ie: variant;
+
+    frame_name: olevariant;
+    Winds: IShellWindows;
+    IEWB: IWebBrowser2;
+    Doc: IHtmlDocument2;
+    frames: IHTMLFramesCollection2;
+    window: IHTMLWindow2;
+    Location: IHTMLLocation;
+    url: string;
+
+    frame_dispatch: IDispatch;
+
+    _type: string;
+    _id: string;
+
 begin
 
   if Shift = [ssCtrl, ssAlt, ssShift] then begin
@@ -674,6 +690,57 @@ begin
   if (Key = ord ('S')) and (Shift = [ssCtrl]) then SaveFile;
 
   if Shift = [] then case Key of
+
+
+
+
+    VK_F2: begin
+
+      try
+
+      Winds:=CoShellWindows.Create;
+
+      for i:=0 to Winds.Count-1 do
+        if (Winds.Item(i) as IWEbBrowser2).Document <> nil then
+          begin
+            IEWB:=Winds.Item (i) as IWEbBrowser2;
+            if IEWB.Document.QueryInterface(IhtmlDocument2, Doc)= S_OK
+          then begin
+            frames := Doc.frames;
+            frame_name := '_body_iframe';
+            frame_dispatch := frames.Item (frame_name);
+            window := frame_dispatch as IHTMLWindow2;
+            doc := window.document;
+            url := Doc.url;
+
+            _type := copy (url, pos ('&type=', url) + 6, length (url) - pos ('&type=', url) - 6);
+            _type := copy (_type, 1, pos ('&', _type) - 1);
+
+            _id := '';
+            if pos ('&id=', url) > 0 then begin
+              _id := copy (url, pos ('&id=', url) + 4, length (url) - pos ('&id=', url) - 4);
+              _id := copy (_id, 1, pos ('&', _id) - 1);
+            end;
+
+            ListBoxTypes.ItemIndex := ListBoxTypes.Items.IndexOf (_type);
+
+            if length (_id) > 0
+             then begin RadioButtonGetItem.Checked := true end
+             else begin RadioButtonSelect.Checked := true end;
+
+            LoadCurrentSub;
+
+          end;
+
+      end;
+
+      except
+
+        Application.MessageBox ('Can''t find the right IE window, sorry', 'Error', mb_ok + mb_iconerror);
+
+      end;
+
+    end;
 
     VK_F1: begin
       s := SynEdit.SelText;
