@@ -9,7 +9,7 @@
 			no_edit => $data -> {no_del},
 			
 			path => [
-				{type => '__TYPE__', name => '???'},
+				{type => '__TYPE__', name => action_type_label},
 				{type => '__TYPE__', name => $data -> {label}, id => $data -> {id}},
 			],
 			

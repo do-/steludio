@@ -44,11 +44,11 @@
 				
 				name => 't1',
 				
-				title => {label => '...'},
+				title => {label => action_type_label},
 
 #				path => [
 #					{name => 'Главная страница', type => 'home_page', id => ''},
-#					{name => '...', type => '__TYPE__', id => ''},
+#					{name => action_type_label, type => '__TYPE__', id => ''},
 #				],
 
 				top_toolbar => [{
