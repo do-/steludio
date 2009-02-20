@@ -9,6 +9,8 @@
 #		voc_foo => {order => "id", filter => "id=$$data{id___TYPE__}"}
 #	);
 
+	$_REQUEST {first} += 0;
+	
 	$data -> {clones} = sql (__TYPE__ => [
 		['label LIKE', substr ($data -> {label}, 0, ($_REQUEST {first} ||= 10)) . '%'],
 	]);
