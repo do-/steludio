@@ -64,6 +64,7 @@ type
       var CanExecute: Boolean);
     procedure EditFilterChange(Sender: TObject);
   private
+    ScmName: string;
     LastLoadedText: string;
     path, appname, tpl_path, ext, sub, brc: string;
     CurrentFile: string;
@@ -462,6 +463,7 @@ begin
   if is_php then brc := ' ($data)' else brc := '';
   if is_php then synedit.Highlighter := SynPHPSyn;
   path := _path;
+
   StatusLine := _StatusLine;
   currentFile := '';
   SetDirty (false);
@@ -482,6 +484,12 @@ begin
 
   Application.MainForm.Caption := appname;
   Application.Title := appname;
+
+  ScmName := '';
+  if DirectoryExists (AnsiReplaceText(path, '\lib', '\.svn')) then ScmName := 'TortoiseSVN';
+  if DirectoryExists (AnsiReplaceText(path, '\lib', '\.git')) then ScmName := 'TortoiseGit';
+
+  ReadSettings;
 
 end;
 
@@ -683,8 +691,13 @@ begin
 
   if Shift = [ssCtrl, ssAlt, ssShift] then begin
 
+    if ScmName = '' then begin
+      Application.MessageBox ('Version control tool not detected, sorry', 'Error', mb_ok);
+      exit;
+    end;
+
     if TortoiseSVNPath = '' then begin
-      Application.MessageBox ('TortoiseSVN is not installed, sorry', 'Error', mb_ok);
+      Application.MessageBox (PChar(ScmName + ' is not installed, sorry'), 'Error', mb_ok);
       exit;
     end;
 
@@ -1058,7 +1071,7 @@ begin
 
       TortoiseSVNPath := '';
       Reg.RootKey := HKEY_LOCAL_MACHINE;
-      if Reg.OpenKey ('\Software\TortoiseSVN', True) then begin
+      if Reg.OpenKey ('\Software\' + ScmName, True) then begin
         TortoiseSVNPath := Reg.ReadString ('ProcPath');
       end;
 
