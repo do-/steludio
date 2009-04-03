@@ -16,6 +16,8 @@
 
 			sub {
 
+				__d ($i);
+
 				draw_cells ({
 					href => "/?type=__TYPE__&id=$$i{id}",
 				},[

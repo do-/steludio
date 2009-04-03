@@ -29,6 +29,7 @@ type
     procedure ListBoxTablesDblClick(Sender: TObject);
     procedure ListBoxTablesKeyPress(Sender: TObject; var Key: Char);
   private
+    LastLoadedText: string;
     dirty: boolean;
     FileName, LastFileName: string;
     StatusLine: TStatusBar;
@@ -63,23 +64,36 @@ begin
 end;
 
 procedure TConfigForm.SaveFile;
+var
+ sl: TStringList;
+ s: string;
 begin
 
   if not dirty then exit;
 
   if LastLoadTime < FileDateToDateTime (FileAge (LastFileName)) then begin
 
-    if Application.MessageBox ('Attention! Someone changed the file on the disk since your last read. Load the changed file?', 'Conflict', mb_iconexclamation + mb_yesno) = idyes
-    then begin
+    sl := TStringList.Create;
+    sl.LoadFromFile (LastFileName);
+    s := sl.DelimitedText;
+    sl.Free;
 
-      if Application.MessageBox ('Are you sure to reload the file? (ALL YOUR CHANGES WILL BE LOST!!!)', 'Conflict', mb_iconexclamation + mb_yesno) = idyes then begin
-        SynEdit.Lines.LoadFromFile (LastFileName);
+    if s <> LastLoadedText then begin
+
+      if Application.MessageBox ('Attention! Someone changed the file on the disk since your last read. Load the changed file?', 'Conflict', mb_iconexclamation + mb_yesno) = idyes
+      then begin
+
+        if Application.MessageBox ('Are you sure to reload the file? (ALL YOUR CHANGES WILL BE LOST!!!)', 'Conflict', mb_iconexclamation + mb_yesno) = idyes then begin
+          SynEdit.Lines.LoadFromFile (LastFileName);
+          LastLoadedText := SynEdit.Lines.DelimitedText;
+          Exit;
+        end;
+
+      end
+      else begin
         Exit;
       end;
 
-    end
-    else begin
-      Exit;
     end;
 
   end;
@@ -92,6 +106,8 @@ begin
   if Application.MessageBox ('Touch menu.pm?', 'Question', mb_iconquestion + mb_yesno) = idyes then begin
    TouchMenu ();
   end;
+
+  LastLoadedText := SynEdit.Lines.DelimitedText;
 
 end;
 
@@ -153,6 +169,7 @@ begin
   LastLoadTime := FileDateToDateTime (FileAge (LastFileName));
   SetDirty (false);
   EditName.Text := ListBoxTables.Items [ListBoxTables.ItemIndex];
+  LastLoadedText := SynEdit.Lines.DelimitedText;
 end;
 
 procedure TConfigForm.Init;

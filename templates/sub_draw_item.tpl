@@ -1,4 +1,4 @@
-	my ($data) = @_;
+	my $data = __d ($_[0]);	
 
 	$_REQUEST {__focused_input} = '_label';
 
@@ -53,6 +53,8 @@
 	draw_table (
 
 		sub {
+		
+			__d ($i);
 		
 			draw_cells ({
 				bgcolor => $i -> {id} == $data -> {id} ? '#ffffd0' : undef,

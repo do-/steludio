@@ -64,6 +64,7 @@ type
       var CanExecute: Boolean);
     procedure EditFilterChange(Sender: TObject);
   private
+    LastLoadedText: string;
     path, appname, tpl_path, ext, sub, brc: string;
     CurrentFile: string;
     TortoiseSVNPath: string;
@@ -211,28 +212,42 @@ begin
 end;
 
 procedure TEditForm.SaveFile;
+var
+ sl: TStringList;
+ s: string;
 begin
 
   if not dirty then exit;
 
   if LastLoadTime < FileDateToDateTime (FileAge (currentFile)) then begin
 
-    if Application.MessageBox ('Attention! Someone changed the file on the disk since your last read. Load the changed file?', 'Conflict', mb_iconexclamation + mb_yesno) = idyes
-    then begin
+    sl := TStringList.Create;
+    sl.LoadFromFile (currentFile);
+    s := sl.DelimitedText;
+    sl.Free;
 
-      if Application.MessageBox ('Are you sure to reload the file? (ALL YOUR CHANGES WILL BE LOST!!!)', 'Conflict', mb_iconexclamation + mb_yesno) = idyes then begin
-        LoadCurrentSub;
+    if s <> LastLoadedText then begin
+
+      if Application.MessageBox ('Attention! Someone changed the file on the disk since your last read. Load the changed file?', 'Conflict', mb_iconexclamation + mb_yesno) = idyes
+      then begin
+
+        if Application.MessageBox ('Are you sure to reload the file? (ALL YOUR CHANGES WILL BE LOST!!!)', 'Conflict', mb_iconexclamation + mb_yesno) = idyes then begin
+          LoadCurrentSub;
+          LastLoadedText := SynEdit.Lines.DelimitedText;
+          Exit;
+        end;
+
+      end
+      else begin
         Exit;
       end;
 
-    end
-    else begin
-      Exit;
     end;
 
   end;
 
   SynEdit.Lines.SaveToFile (currentFile);
+  LastLoadedText := SynEdit.Lines.DelimitedText;
   LastLoadTime := FileDateToDateTime (FileAge (currentFile));
   SetDirty (false);
   StatusLine.Panels [2].Text := currentFile + ' saved.';
@@ -295,6 +310,8 @@ begin
     end;
 
     SynEdit.Lines.LoadFromFile (GetFileName);
+    LastLoadedText := SynEdit.Lines.DelimitedText;
+
     currentFile := GetFileName;
     SetDirty (false);
 
