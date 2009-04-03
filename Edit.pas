@@ -707,10 +707,35 @@ begin
 
     app_path := copy (app_path, 1, i - 1);
 
+
+
+
     case Key of
-        ord ('U'): params := '/command:update /path:"' + app_path + '" /notempfile /closeonend:3';
+
         ord ('C'): params := '/command:commit /path:"' + app_path + '" /notempfile';
+
+        ord ('M'): params := '/command:merge /path:"' + app_path + '" /notempfile';
+
+        ord ('S'): params := '/command:switch /path:"' + app_path + '" /notempfile';
+
+        ord ('B'):
+         if ScmName = 'TortoiseGit' then begin
+           params := '/command:branch /path:"' + app_path + '" /notempfile';
+         end
+         else begin
+           params := '/command:copy /path:"' + app_path + '" /notempfile';
+         end;
+
+        ord ('U'):
+         if ScmName = 'TortoiseGit' then begin
+           params := '/command:pull /path:"' + app_path + '" /notempfile';
+         end
+         else begin
+           params := '/command:update /path:"' + app_path + '" /notempfile /closeonend:3';
+         end;
+
         else exit;
+
     end;
 
     ShellExecute (self.Handle, 'open', pchar (TortoiseSVNPath), pchar (params), pchar (app_path), SW_SHOWNORMAL);
