@@ -20,7 +20,7 @@
 #		[ id___TYPE__ => $data -> {id} ],
 #		
 #		[ ORDER       => ['id DESC'] ],
-#		[ LIMIT       => [0 + $_REQUEST {start}, $conf -> {portion}]],
+#		[ LIMIT       => 'start, -50 BY id'],
 #		
 #	], 'voc_something(*)', 'log(dt)', 'users');
 

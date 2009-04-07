@@ -11,7 +11,7 @@
 			
 			['label LIKE %?%' => $_REQUEST {q}],
 			
-			[ LIMIT => [0 + $_REQUEST {start}, $conf -> {portion}]],
+			[ LIMIT => 'start, 50'],
 		
 		],
 			
