@@ -135,7 +135,15 @@ begin
       end;
       Assignfile (f, LastFileName);
       rewrite (f);
+      writeln (f, 'label => ''А что это за таблица?'',');
+      writeln (f);
       writeln (f, 'columns => {');
+      writeln (f, '#' + #9 + 'parent  => ''(' + ListBoxTables.Items [ListBoxTables.ItemIndex] + ')'',          # Родительская запись');
+      writeln (f, '#' + #9 + 'id_user => ''select (users)'', # Ответственный исполнитель');
+      writeln (f, '#' + #9 + 'is_open => ''checkbox'',       # Открыто ли');
+      writeln (f, '#' + #9 + 'label   => ''string'',         # Наименование');
+      writeln (f, '#' + #9 + 'price   => ''money [15, 2]'',  # Сумма');
+      writeln (f);
       writeln (f, '#' + #9 + 'id_user => {TYPE_NAME => ''int''}, ');
       writeln (f, '#' + #9 + 'is_open => {TYPE_NAME => ''tinyint'', NULLABLE => 0, COLUMN_DEF => 0}, ');
       writeln (f, '#' + #9 + 'label   => {TYPE_NAME => ''varchar'', COLUMN_SIZE => 255}, ');
