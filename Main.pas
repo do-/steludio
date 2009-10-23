@@ -4,7 +4,8 @@ interface
 
 uses
   SysUtils, Windows, Messages, Classes, Graphics, Controls,
-  Forms, Dialogs, StdCtrls, Buttons, ExtCtrls, Menus, ComCtrls, Edit, Config, Help;
+  Forms, Dialogs, StdCtrls, Buttons, ExtCtrls, Menus, ComCtrls, Edit, Config,
+  Help, ShellApi, FileCtrl;
 
 type
   TMainForm = class(TForm)
@@ -168,6 +169,16 @@ var
   p: integer;
   is_php: boolean;
   FileName: string;
+  ssh_file: textfile;
+  ssh_address: string;
+
+  SEInfo: TShellExecuteInfo;
+  ExitCode: DWORD;
+  ExecuteFile, ParamString, StartInString: string;
+
+  Drive: char;
+  DirPart, FilePart: string;
+
 begin
 
   case ParamCount of
@@ -208,6 +219,85 @@ begin
      Exit;
   end;
 
+  p := pos ('.elnk', path);
+
+  ProcessPath (path, Drive, DirPart, FilePart);
+
+  ssh_address := '';
+
+  if p > 0 then begin
+
+
+        StartInString := Drive + ':\' + DirPart;
+
+        assignfile (ssh_file, path);
+        reset (ssh_file);
+        readln(ssh_file, ssh_address);
+        closefile (ssh_file);
+
+        ExecuteFile := 'c:\Program Files\Putty\pscp.exe';
+        ParamString := '-r -C -scp ' + ssh_address + '/lib ..';
+
+        FillChar (SEInfo, SizeOf(SEInfo), 0);
+
+        SEInfo.cbSize := SizeOf (TShellExecuteInfo);
+
+        with SEInfo do begin
+
+                fMask        := SEE_MASK_NOCLOSEPROCESS;
+                Wnd          := Application.Handle;
+                lpFile       := PChar (ExecuteFile);
+                lpParameters := PChar (ParamString);
+                lpDirectory  := PChar (StartInString);
+                nShow        := SW_SHOWNORMAL;
+        end;
+
+        if ShellExecuteEx(@SEInfo) then begin
+
+                repeat
+
+                        Application.ProcessMessages;
+
+                        GetExitCodeProcess (SEInfo.hProcess, ExitCode);
+
+                until (ExitCode <> STILL_ACTIVE) or Application.Terminated;
+
+        end
+        else
+                begin
+
+                        ShowMessage ('Can''t copy files with pscp!');
+                        Close;
+                        Exit;
+
+                end;
+
+
+
+          path := StringReplace (path, FilePart, 'config.pm', []);
+
+          FileName := 'config.pm';
+
+          if not fileexists(path) then begin
+
+                FileName := 'config.php';
+
+                StringReplace (path, FilePart, 'config.php', []);
+
+          end;
+
+          if not fileexists(path) then begin
+
+                ShowMessage ('Config.p[m|hp] not found');
+
+                Close;
+
+                Exit;
+
+          end;
+
+  end;
+
   p := pos ('\config.pm', path);
 
   is_php := false;
@@ -218,7 +308,7 @@ begin
   end;
 
   if p = 0 then begin
-     Application.MessageBox (PChar(FileName + ' is not Config.p[m|hp]'), 'Wrong file name', MB_OK);
+     Application.MessageBox (PChar(path + ' is not Config.p[m|hp]'), 'Wrong file name', MB_OK);
      Close;
      Exit;
   end;
@@ -238,7 +328,7 @@ begin
   end;
 
   Application.CreateForm (TConfigForm, ConfigForm);
-  ConfigForm.Init (FileName, StatusLine, is_php);
+  ConfigForm.Init (FileName, StatusLine, is_php, ssh_address);
 
   NewEditForm (is_php);
 

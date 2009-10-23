@@ -97,7 +97,7 @@ type
     procedure ReadSettings;
   public
     ConfigForm: TConfigForm;
-    procedure Init (_path: string; _StatusLine: TStatusBar;is_php: boolean);
+    procedure Init (_path: string; _StatusLine: TStatusBar; is_php: boolean);
     procedure SaveFile;
   end;
 
@@ -251,6 +251,7 @@ begin
   LastLoadedText := SynEdit.Lines.DelimitedText;
   LastLoadTime := FileDateToDateTime (FileAge (currentFile));
   SetDirty (false);
+  self.ConfigForm.scp (currentFile);
   StatusLine.Panels [2].Text := currentFile + ' saved.';
 
 end;
@@ -679,7 +680,7 @@ var
     Doc: IHtmlDocument2;
     frames: IHTMLFramesCollection2;
     window: IHTMLWindow2;
-    Location: IHTMLLocation;
+//    Location: IHTMLLocation;
     url: string;
 
     frame_dispatch: IDispatch;
@@ -690,6 +691,26 @@ var
 begin
 
   if Shift = [ssCtrl, ssAlt, ssShift] then begin
+
+    if ConfigForm.ssh_address <> '' then begin
+
+        case Key of
+
+                ord ('C'), ord ('M'), ord ('S'), ord ('B'): begin
+
+                        params := '-load ' + copy (ConfigForm.ssh_address, 1, pos(':', ConfigForm.ssh_address) - 1);
+
+                        ShellExecute (self.Handle, 'open', 'c:\program files\putty\putty.exe', pchar (params), '', SW_SHOWNORMAL);
+
+                end;
+
+                else exit;
+
+        end;
+
+      exit;
+
+    end;
 
     if ScmName = '' then begin
       Application.MessageBox ('Version control tool not detected, sorry', 'Error', mb_ok);
@@ -745,9 +766,6 @@ begin
   if (Key = ord ('S')) and (Shift = [ssCtrl]) then SaveFile;
 
   if Shift = [] then case Key of
-
-
-
 
     VK_F2: begin
 

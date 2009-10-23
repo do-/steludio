@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, SynEdit, SynEditHighlighter, SynHighlighterPerl, ComCtrls, SearchReplace, SynEditKeyCmds, Registry,
-  StdCtrls, ExtCtrls, SynHighlighterPHP;
+  StdCtrls, ExtCtrls, SynHighlighterPHP, ShellApi;
 
 type
   TConfigForm = class(TForm)
@@ -40,11 +40,13 @@ type
     procedure ReadSettings;
     procedure TouchMenu;
   public
+    ssh_address: string;
     path, ext: string;
-    procedure Init (_FileName: string; _StatusLine: TStatusBar; is_php: boolean);
+    procedure Init (_FileName: string; _StatusLine: TStatusBar; is_php: boolean; ssh_address: string);
     procedure SaveFile;
     procedure LoadFile;
     function GetFileName: string;
+    procedure scp (path: string);
   end;
 
 var
@@ -55,6 +57,44 @@ implementation
 uses Help, FormLine, NewType;
 
 {$R *.dfm}
+
+procedure TConfigForm.scp (path: string);
+var
+ remote_path, params: string;
+ p, l: integer;
+ c: char;
+begin
+
+ if ssh_address = '' then exit;
+
+ remote_path := StringReplace(path, '\', '/', [rfReplaceAll]);
+
+ p := 1 + pos ('/lib/', remote_path);
+
+ if p > 1 then inc (p, 4);
+
+ c := remote_path [p];
+
+ if not (c in ['A' .. 'Z']) then c := chr (ord (c) - 32);
+
+ remote_path [p] := c;
+
+ l := length (remote_path) - p + 1;
+
+ remote_path := copy (remote_path, p, l);
+
+ params := '-C -scp ' + path + ' ' + ssh_address + '/lib/' + remote_path;
+
+ ShellExecute (
+        self.Handle,
+        'open',
+        pchar ('c:\program files\putty\pscp.exe'),
+        pchar (params),
+        '',
+        SW_SHOWNORMAL
+ );
+
+end;
 
 procedure TConfigForm.SetDirty (b: boolean);
 begin
@@ -99,6 +139,9 @@ begin
   end;
 
   SynEdit.Lines.SaveToFile (LastFileName);
+
+  scp (LastFileName);
+
   LastLoadTime := FileDateToDateTime (FileAge (LastFileName));
   SetDirty (false);
   StatusLine.Panels [2].Text := LastFileName + ' saved.';
@@ -184,6 +227,7 @@ procedure TConfigForm.Init;
 var
   sr: TSearchRec;
 begin
+  self.ssh_address := ssh_address;
   if is_php then ext := 'str'      else ext := 'pm';
   if is_php then synedit.Highlighter := SynPHPSyn;
   FileName := _FileName;
@@ -213,11 +257,38 @@ begin
 end;
 
 procedure TConfigForm.TouchMenu;
-var handle: integer;
+var
+ handle, p, l: integer;
+ remote_path, params: string;
 begin
  handle := FileOpen (path + 'Content\menu.pm', 1);
  FileSetDate (handle, DateTimeToFileDate (Now));
  FileClose (handle);
+
+
+ if ssh_address = '' then exit;
+
+ remote_path := StringReplace (path + 'Content\menu.pm', '\', '/', [rfReplaceAll]);
+
+ p := pos ('/lib/', remote_path);
+
+ l := length (remote_path) - p;
+
+ remote_path := copy (remote_path, p, l);
+
+ params := ssh_address + '/lib/' + remote_path;
+
+ params := StringReplace (params, ':', ' touch ', []);
+
+ ShellExecute (
+        self.Handle,
+        'open',
+        pchar ('c:\program files\putty\plink.exe'),
+        pchar (params),
+        '',
+        SW_SHOWNORMAL
+ );
+
 end;
 
 function TConfigForm.GetFileName: string;

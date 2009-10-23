@@ -27,6 +27,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Registry]
 Root: HKCR; Subkey: ".pm"; ValueType: string; ValueName: ""; ValueData: "Steludio"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: ".php"; ValueType: string; ValueName: ""; ValueData: "Steludio"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: ".elnk"; ValueType: string; ValueName: ""; ValueData: "Steludio"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: "Steludio"; ValueType: string; ValueName: ""; ValueData: "Steludio"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "Steludio\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Steludio.exe,0"
 Root: HKCR; Subkey: "Steludio\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\Steludio.exe"" ""%1"""

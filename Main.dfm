@@ -154,7 +154,9 @@ object MainForm: TMainForm
   end
   object OpenDialog: TOpenDialog
     DefaultExt = '.pm'
-    Filter = 'Perl projects|Config*.pm|PHP projects|config*.php'
+    Filter = 
+      'Perl projects|Config*.pm|PHP projects|config*.php|Link files|*.e' +
+      'lnk'
     Title = 'Root module'
     Left = 46
     Top = 7
