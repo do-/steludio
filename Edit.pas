@@ -458,6 +458,7 @@ end;
 procedure TEditForm.Init;
 var
   i: integer;
+  lib_path: string;
 begin
   if is_php then ext := 'php'      else ext := 'pm';
   if is_php then sub := 'function' else sub := 'sub';
@@ -487,8 +488,11 @@ begin
   Application.Title := appname;
 
   ScmName := '';
-  if DirectoryExists (AnsiReplaceText(path, '\lib', '\.svn')) then ScmName := 'TortoiseSVN';
-  if DirectoryExists (AnsiReplaceText(path, '\lib', '\.git')) then ScmName := 'TortoiseGit';
+
+  lib_path := copy (path, 0, pos ('\lib', path) - 1);
+
+  if DirectoryExists (lib_path + '\.svn') then ScmName := 'TortoiseSVN';
+  if DirectoryExists (lib_path + '\.git') then ScmName := 'TortoiseGit';
 
   ReadSettings;
 
