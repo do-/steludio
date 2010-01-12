@@ -83,7 +83,7 @@ object EditForm: TEditForm
         Left = 3
         Top = 3
         Width = 169
-        Height = 20
+        Height = 21
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12

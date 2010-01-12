@@ -475,21 +475,39 @@ begin
   Application.CreateForm (TSearchReplaceForm, SearchReplaceForm);
   SynSearchOptions := [];
 
-  i := length (path);
-  while (i > 0) and not (path [i] in ['\', '/']) do dec (i);
-  dec (i);
-  while (i > 0) and not (path [i] in ['\', '/']) do dec (i);
-  if path [i] in ['\', '/'] then inc (i);
 
-  appname := copy (path, i, length (path) - i + 1);
-  appname := AnsiReplaceStr(appname, '\lib', '');
+  i := pos ('\lib\_', path);
+
+  if i > 0 then appname := copy (path, i + 6, 255)
+
+  else begin
+
+    appname := path;
+
+    i := pos ('\lib', appname);
+
+    appname := copy (appname, 1, i - 1);
+
+    i := length (appname);
+
+    while (i > 0) and (appname [i] <> '\') do dec (i);
+
+    delete (appname, 1, i);
+
+  end;
+
+  appname := UpperCase (appname);
+
+
+//  if appname [1] = '_' then delete (appname, 1, 1);
 
   Application.MainForm.Caption := appname;
   Application.Title := appname;
 
   ScmName := '';
 
-  lib_path := copy (path, 0, pos ('\lib', path) - 1);
+  i := pos ('\lib', path);
+  lib_path := copy (path, 0, i - 1);
 
   if DirectoryExists (lib_path + '\.svn') then ScmName := 'TortoiseSVN';
   if DirectoryExists (lib_path + '\.git') then ScmName := 'TortoiseGit';
