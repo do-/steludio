@@ -154,11 +154,13 @@ begin
 
      if RadioButtonSelect.Checked                              then Result := FillTemplate (sub + '_select');
      if RadioButtonGetItem.Checked                             then Result := FillTemplate (sub + '_get_item');
+     if RadioButtonDo.Checked                                  then Result := FillTemplate (sub + '_do');
      if RadioButtonDo.Checked and (GetActionName = 'create')   then Result := FillTemplate (sub + '_do_create');
      if RadioButtonDo.Checked and (GetActionName = 'add')      then Result := FillTemplate (sub + '_do_add');
      if RadioButtonDo.Checked and (GetActionName = 'update')   then Result := FillTemplate (sub + '_do_update');
      if RadioButtonDo.Checked and (GetActionName = 'download') then Result := FillTemplate (sub + '_do_download');
      if RadioButtonDo.Checked and (GetActionName = 'delete')   then Result := FillTemplate (sub + '_do_delete');
+     if RadioButtonDo.Checked and (GetActionName = 'print')    then Result := FillTemplate (sub + '_do_print');
      if RadioButtonDraw.Checked                                then Result := FillTemplate (sub + '_draw');
      if RadioButtonDrawItem.Checked                            then Result := FillTemplate (sub + '_draw_item');
      if RadioButtonValidate.Checked                            then Result := FillTemplate (sub + '_validate');
@@ -898,6 +900,7 @@ begin
     ord ('U'): GoToAction ('update');      // do_update_...
     ord ('D'): GoToAction ('delete');      // do_delete_...
     ord ('A'): GoToAction ('add');         // do_add_...
+    ord ('P'): GoToAction ('print');       // do_print_...
 
   end;
 
